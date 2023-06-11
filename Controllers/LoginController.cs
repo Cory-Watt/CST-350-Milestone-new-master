@@ -17,10 +17,12 @@ namespace Milestone.Controllers
 
             if (securityService.IsValid(userModel))
             {
+                HttpContext.Session.SetString("username", userModel.UserName);
                 return View("LoginSuccess", userModel);
             }
             else
             {
+                HttpContext.Session.Remove("username");
                 return View("LoginFailure", userModel);
             }
 

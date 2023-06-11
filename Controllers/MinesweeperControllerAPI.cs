@@ -45,7 +45,7 @@ namespace Milestone.Controllers
         [HttpPost("saveGame")]
         public IActionResult SaveGame(GameDTO game)
         {
-            game.SaveDateTime = DateTime.Now;
+            //game.SaveDateTime = DateTime.Now;
             _gameService.SaveGame(game);
             return Ok();
         }

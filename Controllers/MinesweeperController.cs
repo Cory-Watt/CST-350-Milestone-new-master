@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Milestone.Models;
+using Milestone.Services;
 using System.Drawing;
 using System.Linq;
 using System.Security.Policy;
+using System.Text.Json;
 
 namespace Milestone.Controllers
 {
@@ -16,6 +19,7 @@ namespace Milestone.Controllers
         const int BOMB_SIZE = 5;
         const int ROW_SIZE = 5;
         public ButtonModel[,] grid { get; set; }
+        GameDAO gameDAO = new GameDAO();
         public IActionResult Index()
         {
             grid = new ButtonModel[5, 5];
@@ -316,6 +320,27 @@ public IActionResult HandleButtonClick(string buttonNumber)
                     }
                 }
             }
+        }
+
+        public IActionResult saveGame()
+        {
+            GameDTO game = new GameDTO();
+            game.date = DateTime.Now.ToString("MM / dd / yyyy");
+            game.time = DateTime.Now.ToString("H: mm");
+            game.UserId = "test";
+            string gameData = "";
+            foreach (ButtonModel button in buttons)
+            {
+                string jsonString = JsonSerializer.Serialize(button);
+                gameData += jsonString;
+            }
+            game.gameData = gameData;
+             Console.WriteLine(gameData);
+
+            gameDAO.SaveGame(game);
+
+
+            return View("View", gameDAO.GetSavedGames());
         }
 
     }
