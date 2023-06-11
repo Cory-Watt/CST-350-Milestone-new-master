@@ -49,7 +49,11 @@
                     }
 
                     <button class="game-button" type="submit" name="buttonNumber" value="@item.Id">
-                        @if (item.ButtonState == 0)
+                        @if (item.Flagged)
+                        {
+                            <img class="game-button-image" src="~/img/flag.png" />
+                        }
+                        else if (item.ButtonState == 0)
                         {
                             <img class="game-button-image" src="~/img/unopenedsquare.png" />
                         }

@@ -26,5 +26,16 @@
             Neighbors = 0;
             ButtonState = buttonState;
         }
+
+        public ButtonModel(int id, int buttonState, bool live, bool visited, int neighbors, string imageName, bool flagged) 
+        {
+            Id = id;
+            ButtonState = buttonState;
+            Live = live;
+            Visited = visited;
+            Neighbors = neighbors;
+            ImageName = imageName;
+            Flagged = flagged;
+        }
     }
 }

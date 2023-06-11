@@ -101,7 +101,7 @@ namespace Milestone.Services
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sqlStatement = "DELETE FROM Games WHERE ID = @GameId";
+                string sqlStatement = "DELETE FROM Games WHERE gameId = @GameId";
 
                 SqlCommand command = new SqlCommand(sqlStatement, connection);
                 command.Parameters.AddWithValue("@GameId", gameId);

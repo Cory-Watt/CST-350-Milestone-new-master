@@ -38,8 +38,8 @@
             </td>
             
             <td>
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Resume", "Resume", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "deleteGame", new { item.GameId }) |
+                    @Html.ActionLink("Resume", "resumeGame", new { item.gameData }) |
             </td>
         </tr>
 }
