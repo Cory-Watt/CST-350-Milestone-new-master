@@ -367,6 +367,10 @@ public IActionResult HandleButtonClick(string buttonNumber)
 
 
         }
+        public IActionResult ShowGames()
+        {
+            return View("SavedGames", gameDAO.GetSavedGames());
+        }
 
         public IActionResult deleteGame(int GameId) 
 
