@@ -43,36 +43,31 @@ namespace Milestone.Services
 
         public GameDTO GetGameById(int gameId)
         {
-        //    using (SqlConnection connection = new SqlConnection(connectionString))
-        //    {
-        //        string sqlStatement = "SELECT * FROM Games WHERE ID = @GameId";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sqlStatement = "SELECT * FROM Games WHERE gameId = @GameId";
 
-        //        SqlCommand command = new SqlCommand(sqlStatement, connection);
-        //        command.Parameters.AddWithValue("@GameId", gameId);
+                SqlCommand command = new SqlCommand(sqlStatement, connection);
+                command.Parameters.AddWithValue("@GameId", gameId);
 
-        //        connection.Open();
+                connection.Open();
 
-        //        SqlDataReader reader = command.ExecuteReader();
+                SqlDataReader reader = command.ExecuteReader();
 
-        //        if (reader.Read())
-        //        {
-        //            GameDTO game = new GameDTO
-        //            {
-        //                Id = (int)reader["GameID=d"],
-        //                ButtonState = (int)reader["ButtonState"],
-        //                Live = (bool)reader["Live"],
-        //                Row = (int)reader["Row"],
-        //                Column = (int)reader["Column"],
-        //                Visited = (bool)reader["Visited"],
-        //                Neighbors = (int)reader["Neighbors"],
-        //                ImageName = (string)reader["ImageName"],
-        //                Flagged = (bool)reader["Flagged"],
-        //                SaveDateTime = (DateTime)reader["SaveDateTime"]
-        //            };
+                if (reader.Read())
+                {
+                    GameDTO game = new GameDTO
+                    {
+                        GameId = (int)reader["gameId"],
+                        UserId = (string)reader["UserId"],
+                        time = (string)reader["time"],
+                        date = (string)reader["date"],
+                        gameData = (string)reader["gameData"]
+                    };
 
-        //            return game;
-        //        }
-        //    }
+                    return game;
+                }
+            }
 
             return null;
         }
