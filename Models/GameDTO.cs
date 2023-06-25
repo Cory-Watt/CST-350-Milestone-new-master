@@ -2,30 +2,23 @@
 {
     public class GameDTO
     {
-        public int Id { get; set; }
+        public int GameId { get; set; }
+        public string UserId { get; set; }
 
-        public int ButtonState { get; set; }
-        public bool Live { get; set; }
-        public int Row { get; set; }
-        public int Column { get; set; }
-        public bool Visited { get; set; }
-        public int Neighbors { get; set; }
-        public string ImageName { get; set; }
-        public bool Flagged { get; set; }
-        public DateTime SaveDateTime { get; internal set; }
+        public string time { get; set; }
+
+        public string date { get; set; }
+       public  string gameData { get; set; }
+        
 
         public GameDTO() { }
 
-        public GameDTO(int id, int buttonState)
+        public GameDTO(string UserId, string time, string date, string gameData)
         {
-            // Setting default values
-            Id = id;
-            Row = -1;
-            Column = -1;
-            Visited = false;
-            Live = false;
-            Neighbors = 0;
-            ButtonState = buttonState;
+            this.UserId = UserId;
+            this.time = time;
+            this.date = date;
+            this.gameData = gameData;
         }
 
     }

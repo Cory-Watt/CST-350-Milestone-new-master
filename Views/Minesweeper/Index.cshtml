@@ -49,7 +49,11 @@
                     }
 
                     <button class="game-button" type="submit" name="buttonNumber" value="@item.Id">
-                        @if (item.ButtonState == 0)
+                        @if (item.Flagged)
+                        {
+                            <img class="game-button-image" src="~/img/flag.png" />
+                        }
+                        else if (item.ButtonState == 0)
                         {
                             <img class="game-button-image" src="~/img/unopenedsquare.png" />
                         }
@@ -66,7 +70,15 @@
             }
         </div>
 
+        
+    </form>
+
+    <form method="post" action="/Minesweeper/SaveGame">
         <button class="game-button" type="submit" name="saveGameButton" value="save">Save Game</button>
+    </form>
+
+    <form method="post" action="/Minesweeper/ShowGames">
+        <button class="game-button" type="submit" name="saveGameButton" value="save">Show Save Game</button>
     </form>
 
     <div id="messageArea">

@@ -27,21 +27,16 @@ namespace Milestone.Services
                 {
                     GameDTO game = new GameDTO
                     {
-                        Id = (int)reader["ID"],
-                        ButtonState = (int)reader["ButtonState"],
-                        Live = (bool)reader["Live"],
-                        Row = (int)reader["Row"],
-                        Column = (int)reader["Column"],
-                        Visited = (bool)reader["Visited"],
-                        Neighbors = (int)reader["Neighbors"],
-                        ImageName = (string)reader["ImageName"],
-                        Flagged = (bool)reader["Flagged"],
-                        SaveDateTime = (DateTime)reader["SaveDateTime"]
+                        GameId = (int)reader["gameId"],
+                        UserId = (string)reader["UserId"],
+                        time = (string)reader["time"],
+                        date = (string)reader["date"],
+                        gameData = (string)reader["gameData"]
                     };
 
                     savedGames.Add(game);
                 }
-            }
+        }
 
             return savedGames;
         }
@@ -50,7 +45,7 @@ namespace Milestone.Services
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sqlStatement = "SELECT * FROM Games WHERE ID = @GameId";
+                string sqlStatement = "SELECT * FROM Games WHERE gameId = @GameId";
 
                 SqlCommand command = new SqlCommand(sqlStatement, connection);
                 command.Parameters.AddWithValue("@GameId", gameId);
@@ -63,16 +58,11 @@ namespace Milestone.Services
                 {
                     GameDTO game = new GameDTO
                     {
-                        Id = (int)reader["ID"],
-                        ButtonState = (int)reader["ButtonState"],
-                        Live = (bool)reader["Live"],
-                        Row = (int)reader["Row"],
-                        Column = (int)reader["Column"],
-                        Visited = (bool)reader["Visited"],
-                        Neighbors = (int)reader["Neighbors"],
-                        ImageName = (string)reader["ImageName"],
-                        Flagged = (bool)reader["Flagged"],
-                        SaveDateTime = (DateTime)reader["SaveDateTime"]
+                        GameId = (int)reader["gameId"],
+                        UserId = (string)reader["UserId"],
+                        time = (string)reader["time"],
+                        date = (string)reader["date"],
+                        gameData = (string)reader["gameData"]
                     };
 
                     return game;
@@ -86,19 +76,16 @@ namespace Milestone.Services
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sqlStatement = "INSERT INTO Games (ButtonState, Live, Row, Column, Visited, Neighbors, ImageName, Flagged, SaveDateTime) " +
-                                      "VALUES (@ButtonState, @Live, @Row, @Column, @Visited, @Neighbors, @ImageName, @Flagged, @SaveDateTime)";
+                string sqlStatement = "INSERT INTO Games (UserId, time, date, gameData) " +
+                                      "VALUES (@UserId, @time, @date, @gameData)";
 
                 SqlCommand command = new SqlCommand(sqlStatement, connection);
-                command.Parameters.AddWithValue("@ButtonState", game.ButtonState);
-                command.Parameters.AddWithValue("@Live", game.Live);
-                command.Parameters.AddWithValue("@Row", game.Row);
-                command.Parameters.AddWithValue("@Column", game.Column);
-                command.Parameters.AddWithValue("@Visited", game.Visited);
-                command.Parameters.AddWithValue("@Neighbors", game.Neighbors);
-                command.Parameters.AddWithValue("@ImageName", game.ImageName);
-                command.Parameters.AddWithValue("@Flagged", game.Flagged);
-                command.Parameters.AddWithValue("@SaveDateTime", game.SaveDateTime);
+        
+                
+                command.Parameters.AddWithValue("@UserId",  game.UserId);
+                command.Parameters.AddWithValue("@time", game.time);
+                command.Parameters.AddWithValue("@date", game.date);
+                command.Parameters.AddWithValue("@gameData", game.gameData);
 
                 connection.Open();
                 command.ExecuteNonQuery();
@@ -109,7 +96,7 @@ namespace Milestone.Services
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sqlStatement = "DELETE FROM Games WHERE ID = @GameId";
+                string sqlStatement = "DELETE FROM Games WHERE gameId = @GameId";
 
                 SqlCommand command = new SqlCommand(sqlStatement, connection);
                 command.Parameters.AddWithValue("@GameId", gameId);

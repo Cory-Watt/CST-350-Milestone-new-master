@@ -28,28 +28,30 @@ namespace Milestone.Models
 
         public GameDTO GetGameById(int gameId)
         {
-            return _savedGames.FirstOrDefault(g => g.Id == gameId);
+            return null;
+            // return _savedGames.FirstOrDefault(g => g.Id == gameId);
         }
 
         public void SaveGame(GameDTO game)
         {
             // Generate a unique ID for the game
-            int gameId = _savedGames.Count > 0 ? _savedGames.Max(g => g.Id) + 1 : 1;
-            game.Id = gameId;
+            //int gameId = _savedGames.Count > 0 ? _savedGames.Max(g => g.Id) + 1 : 1;
+            //game.Id = gameId;
 
             // Set the current date and time
-            game.SaveDateTime = DateTime.Now;
+            //game.SaveDateTime = DateTime.Now;
 
-            _savedGames.Add(game);
+            //_savedGames.Add(game);
+            
         }
 
         public void DeleteGame(int gameId)
         {
-            GameDTO game = _savedGames.FirstOrDefault(g => g.Id == gameId);
-            if (game != null)
-            {
-                _savedGames.Remove(game);
-            }
+            //GameDTO game = _savedGames.FirstOrDefault(g => g.Id == gameId);
+            //if (game != null)
+            //{
+            //    _savedGames.Remove(game);
+            //}
         }
     }
 }

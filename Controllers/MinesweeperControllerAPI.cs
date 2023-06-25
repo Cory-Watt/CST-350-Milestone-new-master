@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Milestone.Models;
+using Milestone.Services;
+using NuGet.Protocol.Core.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Http.Description;
 
 namespace Milestone.Controllers
 {
@@ -10,42 +13,46 @@ namespace Milestone.Controllers
     [Route("api")]
     public class MinesweeperControllerAPI : ControllerBase
     {
-        private readonly IGameService _gameService;
+        GameDAO _gameService =  new GameDAO();
 
-        public MinesweeperControllerAPI(IGameService gameService)
+        public MinesweeperControllerAPI()
         {
-            _gameService = gameService;
+            _gameService = new GameDAO();
         }
 
         [HttpGet("showSavedGames")]
-        public IActionResult ShowSavedGames()
+        [ResponseType(typeof(List<GameDTO>))]
+        public ActionResult<IEnumerable<GameDTO>>ShowSavedGames()
         {
-            List<GameDTO> savedGames = _gameService.GetSavedGames();
-            return Ok(savedGames);
+
+            List<GameDTO> gameDTOs = _gameService.GetSavedGames();
+
+            return gameDTOs;
         }
 
         [HttpGet("showSavedGames/{gameId}")]
-        public IActionResult ShowSavedGame(int gameId)
+        [ResponseType(typeof(GameDTO))]
+        public ActionResult <GameDTO> ShowSavedGame(int gameId)
         {
             GameDTO game = _gameService.GetGameById(gameId);
             if (game == null)
             {
                 return NotFound();
             }
-            return Ok(game);
+            return game;
         }
 
         [HttpDelete("deleteOneGame/{gameId}")]
-        public IActionResult DeleteOneGame(int gameId)
+        public void DeleteOneGame(int gameId)
         {
             _gameService.DeleteGame(gameId);
-            return NoContent();
+
         }
 
         [HttpPost("saveGame")]
         public IActionResult SaveGame(GameDTO game)
         {
-            game.SaveDateTime = DateTime.Now;
+            //game.SaveDateTime = DateTime.Now;
             _gameService.SaveGame(game);
             return Ok();
         }

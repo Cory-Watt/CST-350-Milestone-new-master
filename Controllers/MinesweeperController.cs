@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Milestone.Models;
-using System.Drawing;
-using System.Linq;
-using System.Security.Policy;
+using Milestone.Services;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace Milestone.Controllers
 {
@@ -16,36 +18,43 @@ namespace Milestone.Controllers
         const int BOMB_SIZE = 5;
         const int ROW_SIZE = 5;
         public ButtonModel[,] grid { get; set; }
+        GameDAO gameDAO = new GameDAO();
+
+        [CustomAuthorization]
         public IActionResult Index()
         {
-            grid = new ButtonModel[5, 5];
-            //Will loop thorugh the row
-            int id = 0;
-            for (int r = 0; r < 5; r++)
+            if (buttons.Count == 0)
             {
-                //will loop through the coulmns of the above row
-                for (int c = 0; c < 5; c++)
+                grid = new ButtonModel[5, 5];
+                //Will loop thorugh the row
+                int id = 0;
+                for (int r = 0; r < 5; r++)
                 {
-                    // create new cell object and add in every postinon in the grid
-                    ButtonModel button = new ButtonModel(id,0);
-                    grid[r, c] = button;
-                    id++;
+                    //will loop through the coulmns of the above row
+                    for (int c = 0; c < 5; c++)
+                    {
+                        // create new cell object and add in every postinon in the grid
+                        ButtonModel button = new ButtonModel(id, 0);
+                        grid[r, c] = button;
+                        id++;
+                    }
                 }
+                setupLiveNeighbors();
+                calculateLiveNeigbors();
+                buttons.Clear();
+                buttons.AddRange(grid.Cast<ButtonModel>());
+                buttons = grid.Cast<ButtonModel>().ToList();
+              
             }
-            setupLiveNeighbors();
-            calculateLiveNeigbors();
-            buttons.Clear();
-            buttons.AddRange(grid.Cast<ButtonModel>());
-            buttons = grid.Cast<ButtonModel>().ToList();
             //This is to check live bombs location for cheating/testing purposes
-            for(int r = 0; r < buttons.Count; r++)
+            for (int r = 0; r < buttons.Count; r++)
             {
                 if (buttons.ElementAt(r).Live)
                 {
-                    Console.WriteLine("button is live: "+ r);
+                    Console.WriteLine("button is live: " + r);
                 }
             }
-            //
+            
             return View("Index", buttons);
         }
 
@@ -316,6 +325,60 @@ public IActionResult HandleButtonClick(string buttonNumber)
                     }
                 }
             }
+        }
+
+        public IActionResult saveGame()
+        {
+            GameDTO game = new GameDTO();
+            game.date = DateTime.Now.ToString("MM / dd / yyyy");
+            game.time = DateTime.Now.ToString("H: mm");
+            game.UserId = "test";
+            string gameData = "";
+            //foreach (ButtonModel button in buttons)
+            //{
+              string jsonString = System.Text.Json.JsonSerializer.Serialize(buttons);
+              gameData = jsonString;
+            //}
+            game.gameData = gameData;
+             Console.WriteLine(gameData);
+
+            gameDAO.SaveGame(game);
+
+
+            return View("SavedGames", gameDAO.GetSavedGames());
+        }
+
+        public IActionResult resumeGame(string gameData)
+        {
+           
+            buttons.Clear();
+            
+            var jsonArray = JArray.Parse(gameData);
+            foreach(var data in jsonArray)
+    {
+                var id = (int)data["Id"];
+                var buttonState = (int)data["ButtonState"];
+                var live = (bool)data["Live"];
+                var visited = (bool)data["Visited"];
+                var neighbours = (int)data["Neighbors"];
+                var image = (String)data["ImageName"];
+                var flagged = (bool)data["Flagged"];
+                buttons.Add(new ButtonModel(id, buttonState, live, visited, neighbours, image, flagged));
+            }
+            return View("Index", buttons);
+
+
+        }
+        public IActionResult ShowGames()
+        {
+            return View("SavedGames", gameDAO.GetSavedGames());
+        }
+
+        public IActionResult deleteGame(int GameId) 
+
+        {
+            gameDAO.DeleteGame(GameId);
+            return View("SavedGames", gameDAO.GetSavedGames());
         }
 
     }
