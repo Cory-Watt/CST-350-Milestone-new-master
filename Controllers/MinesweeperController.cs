@@ -19,6 +19,8 @@ namespace Milestone.Controllers
         const int ROW_SIZE = 5;
         public ButtonModel[,] grid { get; set; }
         GameDAO gameDAO = new GameDAO();
+
+        [CustomAuthorization]
         public IActionResult Index()
         {
             if (buttons.Count == 0)
@@ -52,7 +54,7 @@ namespace Milestone.Controllers
                     Console.WriteLine("button is live: " + r);
                 }
             }
-            //
+            
             return View("Index", buttons);
         }
 
